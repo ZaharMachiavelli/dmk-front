@@ -1,4 +1,6 @@
-import { createApp } from "vue";
+import {
+  createApp
+} from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
@@ -12,4 +14,4 @@ components.forEach((component) => {
   app.component(component.name, component);
 });
 
-app.use(store).use(router, axios, VueCookies).mount("#app");
+app.use(store).use(router, axios).mount("#app");
