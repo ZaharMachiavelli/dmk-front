@@ -16,7 +16,6 @@
     <div>
       <h3>Выберите интересующую профессию</h3>
       <select v-model="result.activeProfession">
-        <option :value="false">Выберите профессию</option>
         <option
           v-for="(profession, index) in professions"
           :key="index"
