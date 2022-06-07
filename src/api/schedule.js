@@ -68,7 +68,7 @@ export class ScheduleApi {
   }
 
   static async getFavouriteCourses(favourites) {
-    let response = await axios.post(`http://127.0.0.1:8000/courses`, favourites);
+    let response = await axios.post(`${HOST}/courses`, favourites);
     return response.data;
   }
 
