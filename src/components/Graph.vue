@@ -17,7 +17,6 @@
 
 <script>
 import { Bar } from "vue-chartjs";
-import { getGraphes } from "@/stubs/fakeApi";
 import {
   Chart as ChartJS,
   Title,
