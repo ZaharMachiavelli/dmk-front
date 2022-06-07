@@ -1,22 +1,22 @@
 <template>
-  <div class="profile" v-if="loading">
+  <div class="profile" v-if="!loading">
     <h2>
       Профиль пользователя <span>{{ user.username }}</span>
     </h2>
     <div class="grid-container">
         <h3>Личная информация</h3>
-      <div class="input-grid">
-        <input :value="user.first_name" placeholder="Ваше имя" class="profile-input a" />
-        <input :value="user.last_name" placeholder="Ваша фамилия" class="profile-input b" />
-        <input :value="user.email" placeholder="Ваш email" class="profile-input c" />
-        <textarea :value="user.biography" placeholder="Немного о себе..." class="biography"> </textarea>
-        <button class="save">Сохранить</button>
-      </div>
+      <form class="input-grid">
+        <input :value="user.first_name" @input="changeBio" placeholder="Ваше имя" class="profile-input a" />
+        <input :value="user.last_name" @input="changeBio" placeholder="Ваша фамилия" class="profile-input b" />
+        <input :value="user.email" @input="changeBio" placeholder="Ваш email" class="profile-input c" />
+        <textarea :value="user.biography" @input="changeBio" placeholder="Немного о себе..." class="biography"> </textarea>
+        <button class="save" @click="addInfo">Сохранить</button>
+      </form>
 
     <h3>Избранные курсы</h3>
       <div class="fav-disciplines">
         <Discipline
-        v-for="(card, index) in courses"
+        v-for="(card, index) in $store.state.user.favourites"
         :key="index"
         :cards="[card]"
         :last="true"
@@ -37,7 +37,13 @@ export default {
       return {
           courses: [],
           loading: false,
+          person: null,
       }
+  },
+  methods: {
+    addInfo() {
+      console.log('gg');
+    }
   },
   computed: {
     ...mapState({
@@ -47,6 +53,7 @@ export default {
   },
   async created() {
     this.loading = true;
+    this.person = JSON.parse(JSON.stringify(this.$store.state.user));
     this.courses = await ScheduleApi.getCourses();
     console.log(this.courses);
     this.loading  =false;

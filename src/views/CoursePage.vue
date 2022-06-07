@@ -3,7 +3,7 @@
     <div class="course-page-info">
       <h1>{{ course.name }}</h1>
       <div class="course-page-main">
-        <img :src="require(course.get_image ? course.get_image : '../assets/course-no.jpg')" />
+        <img :src="course.get_image" />
         <p class="course-page-desc">{{ course.description }}</p>
       </div>
       <a :href="course.link">Ссылка на прохождение курса</a>

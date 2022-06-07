@@ -26,7 +26,6 @@ export default createStore({
       state.isAuth = !state.isAuth;
     },
     setUser(state, context) {
-      console.log('nana');
       for (let key in context) {
         state.user[key] = context[key];
       }

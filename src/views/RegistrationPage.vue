@@ -135,15 +135,10 @@ export default {
           axios.defaults.headers.common["Authorization"] = `Token ${result.data.auth_token}`;
           this.$store.commit("changeAuth");
           this.$store.dispatch("FETCH_user");
-          this.$route.push("/schedule");
+          this.$route.push({ path: '/schedule' });
         }
       }
     },
-  },
-  mounted() {
-    console.log(this.v$.password2.$error);
-    document.cookie = "username=Chmo";
-    console.log(document.cookie);
   },
   computed: {
     registration() {

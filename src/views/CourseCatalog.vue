@@ -1,5 +1,5 @@
 <template>
-  <div class="container-course">
+  <div class="container-course" v-if="!loading">
     <div class="container-course-header">
       <h2>Каталог курсов</h2>
       <SearchInput @updateValue="(value) => (search = value)" />
@@ -9,15 +9,16 @@
       любой, чтобы узнать о нем подробнее
     </p>
     <div v-if="courses.filter((el) => el.name.includes(search)).length">
-      <router-link
+      <div
         v-for="(course, index) in courses
           .sort()
           .filter((el) => el.name.includes(search))"
         :key="index"
-        :to="`/courses/${course.slug}`"
-        class="course-name"
+        class="course-container"
       >
-        <h4>{{ course.name }}</h4>
+        <router-link :to="`/courses/${course.slug}`" class="course-name">
+          <h4>{{ course.name }}</h4>
+        </router-link>
         <img
           :src="
             require($store.state.user.favourites.includes(course.id)
@@ -28,12 +29,13 @@
           class="favourite-icon"
           @click="changeFavourite(course.id)"
         />
-      </router-link>
+      </div>
     </div>
     <p class="no-result" v-else>
       Ничего не найдено... Попробуйте изменить параметры поиска
     </p>
   </div>
+  <Loader v-else />
 </template>
 
 <script>
@@ -43,6 +45,7 @@ export default {
     return {
       courses: [],
       search: "",
+      loading: false,
     };
   },
   methods: {
@@ -51,19 +54,19 @@ export default {
     },
     async changeFavourite(id) {
       if (this.$store.state.user.favourites.includes(id)) {
-        await ScheduleApi.patchInfo({
-          favourites: this.$store.state.user.favourites.map((el) => el != id),
-        });
+        await ScheduleApi.patchInfo(
+          this.$store.state.user.favourites.filter((el) => el != id)
+        );
       } else {
-        await ScheduleApi.patchInfo({
-          favourites: [...this.$store.state.user.favourites, id],
-        });
+        await ScheduleApi.patchInfo([...this.$store.state.user.favourites, id]);
       }
+      this.$store.dispatch("FETCH_user");
     },
   },
   async created() {
+    this.loading = true;
     this.courses = await ScheduleApi.getCourses();
-    console.log(this.courses);
+    this.loading = false;
   },
 };
 </script>
@@ -109,11 +112,18 @@ export default {
   width: 20px;
   height: 20px;
   margin-left: 10px;
+  cursor: pointer;
 }
 
 .course-name {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.course-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

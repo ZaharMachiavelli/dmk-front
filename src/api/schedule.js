@@ -57,8 +57,15 @@ export class ScheduleApi {
     data.forEach(el => {
       formData.append('favourites', el);
     })
-    let response = await axios.patch(`${HOST}/auth/users/me/`, formData).then(res => res.json());
-    return response;
+    await axios.patch(`${HOST}/auth/users/me/`, formData);
+  }
+
+  static async patchData(data) {
+    let formData = new FormData();
+    for (let key in data) {
+      formData.append(key, data[key]);
+    }
+    await axios.patch(`${HOST}/auth/users/me/`, formData)
   }
 
 }
