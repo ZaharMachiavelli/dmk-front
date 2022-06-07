@@ -4,27 +4,45 @@
       Профиль пользователя <span>{{ user.username }}</span>
     </h2>
     <div class="grid-container">
-        <h3>Личная информация</h3>
+      <h3>Личная информация</h3>
       <form class="input-grid">
-        <input :value="user.first_name" @input="changeBio" placeholder="Ваше имя" class="profile-input a" />
-        <input :value="user.last_name" @input="changeBio" placeholder="Ваша фамилия" class="profile-input b" />
-        <input :value="user.email" @input="changeBio" placeholder="Ваш email" class="profile-input c" />
-        <textarea :value="user.biography" @input="changeBio" placeholder="Немного о себе..." class="biography"> </textarea>
+        <input
+          v-model="person.first_name"
+          placeholder="Ваше имя"
+          class="profile-input a"
+        />
+        <input
+          v-model="person.last_name"
+          placeholder="Ваша фамилия"
+          class="profile-input b"
+        />
+        <input
+          v-model="person.email"
+          placeholder="Ваш email"
+          class="profile-input c"
+        />
+        <textarea
+          v-model="person.biography"
+          placeholder="Немного о себе..."
+          class="biography"
+        >
+        </textarea>
         <button class="save" @click="addInfo">Сохранить</button>
       </form>
 
-    <h3>Избранные курсы</h3>
+      <h3>Избранные курсы</h3>
       <div class="fav-disciplines">
         <Discipline
-        v-for="(card, index) in $store.state.user.favourites"
-        :key="index"
-        :cards="[card]"
-        :last="true"
-      />
+          v-for="(card, index) in courses"
+          :key="index"
+          :cards="[card]"
+          :last="true"
+          :link="card.slug"
+        />
       </div>
     </div>
   </div>
-  <Loader  v-else/>
+  <Loader v-else />
 </template>
 
 <script>
@@ -34,16 +52,18 @@ import { ScheduleApi } from "@/api/schedule.js";
 export default {
   components: { Discipline },
   data() {
-      return {
-          courses: [],
-          loading: false,
-          person: null,
-      }
+    return {
+      courses: [],
+      loading: false,
+      person: null,
+    };
   },
   methods: {
-    addInfo() {
-      console.log('gg');
-    }
+    async addInfo(e) {
+      e.preventDefault();
+      await ScheduleApi.patchInfo(this.person);
+      this.$store.dispatch("FETCH_user");
+    },
   },
   computed: {
     ...mapState({
@@ -54,9 +74,9 @@ export default {
   async created() {
     this.loading = true;
     this.person = JSON.parse(JSON.stringify(this.$store.state.user));
-    this.courses = await ScheduleApi.getCourses();
+    this.courses = await ScheduleApi.getFavouriteCourses(this.person.favourites);
     console.log(this.courses);
-    this.loading  =false;
+    this.loading = false;
   },
   mounted() {
     console.log(this.user);
@@ -88,7 +108,7 @@ h2 span {
 }
 
 h3 {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 .input-grid {
   display: grid;
@@ -101,12 +121,12 @@ h3 {
 }
 
 .fav-disciplines {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .fav-disciplines div {
-    margin-right: 15px;
+  margin-right: 15px;
 }
 
 .a {

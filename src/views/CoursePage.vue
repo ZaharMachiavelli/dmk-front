@@ -6,7 +6,7 @@
         <img :src="course.get_image" />
         <p class="course-page-desc">{{ course.description }}</p>
       </div>
-      <a :href="course.link">Ссылка на прохождение курса</a>
+      <a :href="course.link" style="width:fit-content">Ссылка на прохождение курса</a>
     </div>
 
     <div class="course-page-author">

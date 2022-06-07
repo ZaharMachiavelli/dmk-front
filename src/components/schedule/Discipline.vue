@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @click="goCourse">
     <div class="activeCard">
       <div
         :draggable="dragAllowed"
@@ -18,9 +18,7 @@
       <div
         :style="`background-color:${color}; border: 1px solid ${color};`"
         class="discipline"
-        v-for="(card, index) in cards.filter(
-          (el) => el.name != activeTitle
-        )"
+        v-for="(card, index) in cards.filter((el) => el.name != activeTitle)"
         :key="index"
         @click="activeTitle = card.name"
       >
@@ -37,6 +35,7 @@ export default {
     inLine: { type: Boolean, default: false },
     dragAllowed: { type: Boolean, default: false },
     last: { type: Boolean, default: false },
+    link: { type: String, default: "" },
   },
   data() {
     return {
@@ -52,6 +51,11 @@ export default {
       event.dataTransfer.effectAllowed = "move";
       event.dataTransfer.setData("title", this.title);
       ``;
+    },
+    goCourse() {
+      if (this.link) {
+        this.$router.push({ path: `/courses/${this.link}` });
+      }
     },
   },
   created() {

@@ -54,11 +54,15 @@ export default {
     },
     async changeFavourite(id) {
       if (this.$store.state.user.favourites.includes(id)) {
-        await ScheduleApi.patchInfo(
-          this.$store.state.user.favourites.filter((el) => el != id)
-        );
+        await ScheduleApi.patchInfo({
+          favourites: this.$store.state.user.favourites.filter(
+            (el) => el != id
+          ),
+        });
       } else {
-        await ScheduleApi.patchInfo([...this.$store.state.user.favourites, id]);
+        await ScheduleApi.patchInfo({
+          favourites: [...this.$store.state.user.favourites, id],
+        });
       }
       this.$store.dispatch("FETCH_user");
     },

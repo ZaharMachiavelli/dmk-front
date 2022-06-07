@@ -53,19 +53,23 @@ export class ScheduleApi {
   }
 
   static async patchInfo(data) {
+    
     let formData = new FormData();
-    data.forEach(el => {
-      formData.append('favourites', el);
-    })
+    for (let key in data) {
+      if(Array.isArray(data[key])) {
+        data[key].forEach(el => {
+          formData.append(key, el)
+        })
+      } else {
+        formData.append(key, data[key])
+      }
+    }
     await axios.patch(`${HOST}/auth/users/me/`, formData);
   }
 
-  static async patchData(data) {
-    let formData = new FormData();
-    for (let key in data) {
-      formData.append(key, data[key]);
-    }
-    await axios.patch(`${HOST}/auth/users/me/`, formData)
+  static async getFavouriteCourses(favourites) {
+    let response = await axios.post(`http://127.0.0.1:8000/courses`, favourites);
+    return response.data;
   }
 
 }

@@ -135,7 +135,7 @@ export default {
           axios.defaults.headers.common["Authorization"] = `Token ${result.data.auth_token}`;
           this.$store.commit("changeAuth");
           this.$store.dispatch("FETCH_user");
-          this.$route.push({ path: '/schedule' });
+          this.$router.push({ path: '/schedule' });
         }
       }
     },
