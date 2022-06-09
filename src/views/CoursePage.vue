@@ -3,10 +3,12 @@
     <div class="course-page-info">
       <h1>{{ course.name }}</h1>
       <div class="course-page-main">
-        <img :src="course.get_image" />
+        <img :src="course.image_link" />
         <p class="course-page-desc">{{ course.description }}</p>
       </div>
-      <a :href="course.link" style="width:fit-content">Ссылка на прохождение курса</a>
+      <a :href="course.link" style="width: fit-content"
+        >Ссылка на прохождение курса</a
+      >
     </div>
 
     <div class="course-page-author">
@@ -27,6 +29,7 @@ export default {
     };
   },
   async created() {
+    this.$store.commit("setLink", false);
     this.course = await ScheduleApi.getCourses(`/${this.$route.params.course}`);
     console.log(this.course);
   },
@@ -79,7 +82,7 @@ export default {
 }
 
 .course-page-info {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 </style>

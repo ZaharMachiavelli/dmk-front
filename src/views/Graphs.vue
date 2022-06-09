@@ -112,6 +112,7 @@ export default {
   },
   async created() {
     this.loading = true;
+    this.$store.commit("setLink", false);
     this.graphs = await ScheduleApi.getSkills();
     this.loading = false;
     console.log(this.graphs);

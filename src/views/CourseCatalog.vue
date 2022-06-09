@@ -8,11 +8,11 @@
       Здесь вы можете увидеть все доступные курсы для обучения. Нажмите на
       любой, чтобы узнать о нем подробнее
     </p>
-    <div v-if="courses.filter((el) => el.name.includes(search)).length">
+    <div v-if="courses.filter((el) => el.name.toLowerCase().includes(search.toLowerCase())).length">
       <div
         v-for="(course, index) in courses
           .sort()
-          .filter((el) => el.name.includes(search))"
+          .filter((el) => el.name.toLowerCase().includes(search.toLowerCase()))"
         :key="index"
         class="course-container"
       >
@@ -69,6 +69,7 @@ export default {
   },
   async created() {
     this.loading = true;
+    this.$store.commit("setLink", false);
     this.courses = await ScheduleApi.getCourses();
     this.loading = false;
   },

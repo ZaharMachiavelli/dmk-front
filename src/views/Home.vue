@@ -30,15 +30,14 @@
 </template>
 
 <script>
-export default {};
+export default {
+  created() {
+    this.$store.commit('setLink', true)
+  }
+};
 </script>
 
 <style>
-.main-content {
-  margin-left: 70px;
-  max-width: 40%;
-}
-
 .card {
   background: rgba(40, 33, 84, 0.9);
   border-radius: 10px;

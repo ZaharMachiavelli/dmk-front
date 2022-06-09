@@ -2,11 +2,17 @@
   <section id="app">
     <Sidebar />
     <div class="main">
-      <header>
+      <header v-if="!$store.state.analytics">
         <router-link to="/schedule">Главная</router-link>
         <router-link to="/test">Тест на профориентацию</router-link>
         <router-link to="/skills">Графики</router-link>
         <router-link to="/courses">Каталог курсов</router-link>
+        <router-link to="/login" v-if="!$store.state.isAuth">Войти</router-link>
+        <router-link to="/me" v-else>Профиль</router-link>
+      </header>
+      <header v-else>
+        <router-link to="/">Главная</router-link>
+        <router-link to="/analytics">Графики</router-link>
         <router-link to="/login" v-if="!$store.state.isAuth">Войти</router-link>
         <router-link to="/me" v-else>Профиль</router-link>
       </header>

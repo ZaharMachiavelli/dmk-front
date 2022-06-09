@@ -1,31 +1,40 @@
 <template>
   <div class="service-info">
     <p class="alert-message">
-      {{
+      <!-- {{
         ropMode
           ? "Мы подобрали для вас рекомендуемые дисциплины на выбор. При желании Вы можете нажать на кнопку “Выбрать самостоятельно” и выбрать предметы по желанию."
           : `Вы находитесь в режиме самостоятельного выбора. Нажмите на кнопку \n"Заполнить автоматически\n", чтобы система подобрала для Вас дисциплины.`
-      }}
+      }} -->
+      Мы собрали для вас профессиональную карту обучения
     </p>
-    <div class="version-buttons">
+    <!-- <div class="version-buttons">
       <button class="change-mode" @click="ropMode = !ropMode" type="button">
         {{ ropMode ? "Выбрать самостоятельно" : "Заполнить автоматически" }}
       </button>
       <button class="clean-table" @click="cleanTable" v-if="!ropMode">
         Очистить таблицу
       </button>
-    </div>
-    <div class="course-wide">
-      <Discipline
-        v-for="(step, index) in prepareObject()"
-        :key="index"
-        :cards="step"
-        :last="index == 'tenth'"
-      />
+    </div> -->
+    <div>
+      <div class="course-wide">
+        <Discipline
+          v-for="(step, index) in prepareObject()"
+          :key="index"
+          :cards="step"
+          :last="index == 'tenth'"
+        />
+      </div>
+      <button
+        class="clean-table"
+        @click="setPreset(result.activeProfession.id)"
+      >
+        Добавить в избранное
+      </button>
     </div>
   </div>
 
-  <div v-if="!ropMode">
+  <!-- <div v-if="!ropMode">
     <p v-if="actualProfession">
       Уважаемый пользователь, вашим интересам лучше соответсвует профессия:
       <span class="new-profession">{{ actualProfession.name }}</span>
@@ -35,17 +44,17 @@
       вашей профессии самые акутальные из них, но при желании вы можете что-то
       изменить
     </p>
-  </div>
-  <CoursesList />
+  </div> -->
+  <!-- <CoursesList /> -->
 </template>
 
 <script>
 import Discipline from "@/components/schedule/Discipline.vue";
 import { ScheduleApi } from "@/api/schedule.js";
-import CoursesList from "@/components/schedule/CoursesList.vue";
+// import CoursesList from "@/components/schedule/CoursesList.vue";
 export default {
   props: { result: Object },
-  components: { Discipline, CoursesList },
+  components: { Discipline },
   data() {
     return {
       prechosedDisciplines: {
@@ -120,6 +129,21 @@ export default {
     onLeave(event) {
       if (event.target.classList.contains("extraSubject"))
         event.target.style.background = "white";
+    },
+    async setPreset(id) {
+      if (this.$store.state.user.presets.includes(id)) {
+        await ScheduleApi.patchInfo({
+          presets:
+            this.$store.state.user.presets.filter((el) => el != id).length > 0
+              ? this.$store.state.user.presets.filter((el) => el != id)
+              : [],
+        });
+      } else {
+        await ScheduleApi.patchInfo({
+          presets: [...this.$store.state.user.presets, id],
+        });
+      }
+      this.$store.dispatch("FETCH_user");
     },
     cleanTable() {
       this.prechosedDisciplines = {
@@ -377,6 +401,17 @@ table td {
 
 .clean-table {
   background-color: #b95959;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 15px;
+  color: #fff;
+  font-size: 12px;
+  line-height: 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 15px;
 }
 
 .alert-message {
@@ -415,5 +450,11 @@ table td {
 .course-wide {
   display: flex;
   flex-wrap: wrap;
+}
+
+@media (max-width: 767px) {
+  .course-wide {
+    flex-direction: column;
+  }
 }
 </style>

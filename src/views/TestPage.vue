@@ -58,6 +58,7 @@ export default {
   },
   created() {
     console.log(this.questions[this.progress]);
+    this.$store.commit("setLink", false);
   },
   watch: {
     progress(value) {

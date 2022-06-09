@@ -8,17 +8,17 @@
           <span>Выберите год:</span>
           <select class="select" name="year" id="year" v-model="year">
             <option
-              :value="year"
+              :value="year == '2017-2021' ? 2022 : year"
               v-for="(year, index) in years"
               :key="index"
               :selected="i == 0"
             >
-              {{ year }}
+              {{ year == 2022 ? "2017-2021" : year }}
             </option>
           </select>
         </div>
 
-        <p class="graph-title">{{ year }} год</p>
+        <p class="graph-title">{{ year == 2022 ? "2017-2021" : year }} год</p>
         <Bar
           :chart-options="options"
           :chart-data="chartData"
@@ -178,7 +178,7 @@ export default {
   },
   methods: {
     setData(data) {
-      this.chartData.labels= [];
+      this.chartData.labels = [];
       let array = [];
       this.data = Object.keys(data)
         .filter((el) => this.dictionary[el])
@@ -205,6 +205,9 @@ export default {
   async created() {
     console.log("fwf");
     await this.getStatistic();
+
+    this.$store.commit("setLink", true);
+
     // this.chartData = dataGraphes.year2021.chartData;
     // this.tableData = dataTables.year2021;
   },
@@ -238,6 +241,10 @@ export default {
 </script>
 
 <style>
+.mc-a {
+  width: 100%;
+  margin: 0 auto;
+}
 
 .graph-container {
   text-align: center;

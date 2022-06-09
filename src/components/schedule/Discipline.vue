@@ -107,4 +107,23 @@ export default {
   padding: 5px;
   border: 1px solid black;
 }
+
+@media (max-width: 767px) {
+  .activeCard {
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 0;
+  }
+
+  .activeCard span {
+    display: block;
+    border-left: 2px solid grey;
+    width: 0;
+    height: 20px;
+  }
+  .optionalCards {
+    align-items: center;
+    margin: 5px 0;
+  }
+}
 </style>

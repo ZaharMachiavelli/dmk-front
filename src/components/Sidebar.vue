@@ -7,15 +7,31 @@
     <router-link to="/">Динамика</router-link>
     <router-link to="/">Методика отбора</router-link> -->
     <div class="icons">
-      <router-link to="/"><img src="../assets/statistic.svg" /></router-link>
-      <router-link to="/schedule"><img src="../assets/learning.svg"/></router-link>
+      <router-link to="/"
+        ><img
+          :src="
+            require($store.state.analytics
+              ? '../assets/learning-2.svg'
+              : '../assets/statistic.svg')
+          "
+      /></router-link>
+      <router-link to="/schedule"
+        ><img
+          :src="
+            require($store.state.analytics
+              ? '../assets/statistic-2.svg'
+              : '../assets/learning.svg')
+          "
+        />
+        </router-link
+      >
     </div>
   </div>
 </template>
 
 <style>
 .sidebar {
-  background-color: #08070E;
+  background-color: #08070e;
   flex: 0 0 80px;
   top: 0;
   height: 100vh;

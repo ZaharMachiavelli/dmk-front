@@ -72,6 +72,12 @@ export class ScheduleApi {
     return response.data;
   }
 
+  static async getPresets(presets) {
+    console.log(presets);
+    let response = await axios.post(`${HOST}/professions`, presets);
+    return response.data;
+  }
+
 }
 
 export function getToken() {

@@ -2,7 +2,9 @@ import {
   createStore
 } from "vuex";
 
-import { ScheduleApi } from "../api/schedule";
+import {
+  ScheduleApi
+} from "../api/schedule";
 
 export default createStore({
   state: {
@@ -16,6 +18,7 @@ export default createStore({
       favourites: [],
       id: null,
     },
+    analytics: true,
 
   },
   mutations: {
@@ -30,6 +33,9 @@ export default createStore({
         state.user[key] = context[key];
       }
     },
+    setLink(state, status) {
+      state.analytics = status
+    }
   },
   actions: {
     FETCH_user: async ({

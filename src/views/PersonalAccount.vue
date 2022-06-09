@@ -31,7 +31,7 @@
       </form>
 
       <h3>Избранные курсы</h3>
-      <div class="fav-disciplines">
+      <div class="fav-disciplines" v-if="courses.length">
         <Discipline
           v-for="(card, index) in courses"
           :key="index"
@@ -40,6 +40,23 @@
           :link="card.slug"
         />
       </div>
+      <p v-else class="no-result">Ваш список избранного пуст</p>
+
+      <h3>Избранные карты</h3>
+      <div v-if="presets.length">
+        <div v-for="(profession, id) in presets" :key="id">
+          <h5>{{ profession.name }}</h5>
+          <div class="course-wide">
+            <Discipline
+              v-for="(step, index) in prepareObject(profession)"
+              :key="index"
+              :cards="step"
+              :last="index == 'tenth'"
+            />
+          </div>
+        </div>
+      </div>
+      <p v-else class="no-result">У вас пока нет избранных карт</p>
     </div>
   </div>
   <Loader v-else />
@@ -56,6 +73,7 @@ export default {
       courses: [],
       loading: false,
       person: null,
+      presets: [],
     };
   },
   methods: {
@@ -63,6 +81,17 @@ export default {
       e.preventDefault();
       await ScheduleApi.patchInfo(this.person);
       this.$store.dispatch("FETCH_user");
+    },
+    prepareObject(object) {
+      let profession = JSON.parse(JSON.stringify(object));
+      delete profession.id;
+      delete profession.name;
+      delete profession.description;
+      delete profession.tag;
+      for (let key in profession) {
+        if (!profession[key].length) delete profession[key];
+      }
+      return profession;
     },
   },
   computed: {
@@ -74,7 +103,10 @@ export default {
   async created() {
     this.loading = true;
     this.person = JSON.parse(JSON.stringify(this.$store.state.user));
-    this.courses = await ScheduleApi.getFavouriteCourses(this.person.favourites);
+    this.presets = await ScheduleApi.getPresets(this.person.presets);
+    this.courses = await ScheduleApi.getFavouriteCourses(
+      this.person.favourites
+    );
     console.log(this.courses);
     this.loading = false;
   },
@@ -170,5 +202,28 @@ h3 {
 .save:hover {
   background-color: #0069d9;
   border-color: #0062cc;
+}
+
+.course-wide {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.no-result {
+  font-weight: 600;
+  color: #72808e;
+  margin-bottom: 8px;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.profile h5 {
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .course-wide {
+    flex-direction: column;
+  }
 }
 </style>
